@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="apple-touch-icon" sizes="144x144" href="favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+        <link rel="manifest" href="favicon/site.webmanifest">
+        <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="favicon/favicon.ico">
+        <meta name="apple-mobile-web-app-title" content="Pi Dashboard">
+        <meta name="application-name" content="Pi Dashboard">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="favicon/browserconfig.xml">
+        <meta name="theme-color" content="#ffffff">
+
+        <title>Pi Dashboard</title>
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+        <!-- Vue -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+        <!-- Font Awesome -->
+        <script src="javascripts/fontawesome.js"></script>
+
+        <!-- Gauge.js -->
+        <script src="javascripts/gauge.js"></script>
+
+        <link rel="stylesheet" href="stylesheets/index.css">
+        <link rel="stylesheet" href="stylesheets/navbar.css">
+    </head>
+    <body>
+        <div id="navbar" v-cloak>
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark navbar-fixed-top">
+                <div id="navleft">
+                    <a class="navbar-brand" style="margin-right: 8px" href="/">
+                        <img src="images/logo.png" height="30px" id="navlogo" class="d-inline-block align-top" alt="Logo">
+                        {{hostname}}
+                    </a>
+                    <p id="navip">{{internalip}}</p>
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navlinks">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navlinks">
+                    <div v-if="showLinks == true" class="navbar-nav mx-auto">
+                        <a class="nav-item nav-link active"><i class="fas fa-tachometer-alt"></i>&nbsp; Overview</a>
+                        <a class="nav-item nav-link" href="processes.html"><i class="far fa-chart-bar"></i>&nbsp; Processes</a>
+                        <a class="nav-item nav-link" href="services.html"><i class="fas fa-tasks"></i>&nbsp; Services</a>
+                        <a class="nav-item nav-link" href="settings.html"><i class="fas fa-cog"></i>&nbsp; Settings</a>
+                        <a class="nav-item nav-link" href="tools.html"><i class="fas fa-tools"></i>&nbsp; Tools</a>
+                    </div>
+                    <div class="nav navbar-nav" id="account">
+                        <a id="loginlink" class="nav-link" href="login.html"><i class="fas fa-sign-in-alt"></i>&nbsp; Login</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div id="cards" v-cloak>
+            <!-- Cards -->
+            <div class="container" id="cardcontainer" style="padding-top: 20px;">
+                <div class="row">
+                    <div class="col-md">
+                        <!-- CPU -->
+                        <div class="card bg-dark text-white border border-secondary">
+                            <h3 class="card-header"><i class="fas fa-microchip"></i>&nbsp; CPU<span id="CPU-toggle" onClick="toggleIcon('CPU')" class="card-toggle" data-toggle="collapse" data-target="#CPU-body"><i class="fas fa-chevron-up"></i></span></h3>
+                            <div class="collapse show" id="CPU-body">
+                                <div class="card-body">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md">
+                                                <p class="stat-list"><i class="fas fa-fan fa-fw"></i>&nbsp; <b>Fan:</b> {{ cpu.fan_status }}</p>
+                                                <p class="stat-list"><i class="fas fa-spinner fa-fw"></i>&nbsp; <b>Load:</b> {{ cpu.load }}</p>
+                                                <p class="stat-list"><i class="fas fa-thermometer-half fa-fw"></i>&nbsp; <b>Temperature:</b> {{ cpu.temperature }}°C</p>
+                                                <p class="stat-list"><i class="far fa-clock fa-fw"></i>&nbsp; <b>Uptime:</b> {{ cpu.uptime }}</p>
+                                            </div>
+                                            <div class="col-md" style="display: flex; align-items: center;">
+                                                <div id="cpumeter-value" class="gauge-value"></div>
+                                                <canvas id="cpumeter" class="gauge"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Storage -->
+                        <div class="card bg-dark text-white border border-secondary">
+                            <h3 class="card-header"><i class="fas fa-hdd"></i>&nbsp; Storage<span id="Storage-toggle" onClick="toggleIcon('Storage')" class="card-toggle" data-toggle="collapse" data-target="#Storage-body"><i class="fas fa-chevron-up"></i></span></h3>
+                            <div class="collapse show" id="Storage-body">
+                                <div class="card-body">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <h5 style="margin: 0">Root:</h5>
+                                                        <span class="storage-path">/</span>
+                                                        <p class="stat-list"><b>Total:</b><br class="mobile-break"> {{ storage.root.total }}</p>
+                                                        <p class="stat-list"><b>Used:</b><br class="mobile-break"> {{ storage.root.used }}</p>
+                                                        <p class="stat-list"><b>Free:</b><br class="mobile-break"> {{ storage.root.free }}</p>
+                                                    </div>
+                                                    <div class="col-4" style="border-right: 1px solid gray; padding: 0">
+                                                        <div class="progress vertical-progress">
+                                                            <div class="progress-bar" role="progressbar" v-bind:style="{height: storage.root.percent}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-center">
+                                                            {{ storage.root.percent }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <h5 style="margin: 0">HDD:</h5>
+                                                        <span class="storage-path">/mnt/HDD</span>
+                                                        <p class="stat-list"><b>Total:</b><br class="mobile-break"> {{ storage.hdd.total }}</p>
+                                                        <p class="stat-list"><b>Used:</b><br class="mobile-break"> {{ storage.hdd.used }}</p>
+                                                        <p class="stat-list"><b>Free:</b><br class="mobile-break"> {{ storage.hdd.free }}</p>
+                                                    </div>
+                                                    <div class="col-4" style="padding: 0">
+                                                        <div class="progress vertical-progress">
+                                                            <div class="progress-bar" role="progressbar" v-bind:style="{height: storage.hdd.percent}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-center">
+                                                            {{ storage.hdd.percent }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <!-- Memory -->
+                        <div class="card bg-dark text-white border border-secondary">
+                            <h3 class="card-header"><i class="fas fa-memory"></i>&nbsp; Memory<span id="Memory-toggle" onClick="toggleIcon('Memory')" class="card-toggle" data-toggle="collapse" data-target="#Memory-body"><i class="fas fa-chevron-up"></i></span></h3>
+                            <div class="collapse show" id="Memory-body">
+                                <div class="card-body">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <h5>RAM:</h5>
+                                                        <p class="stat-list"><b>Total:</b><br class="mobile-break"> {{ memory.ram.total }}</p>
+                                                        <p class="stat-list"><b>Used:</b><br class="mobile-break"> {{ memory.ram.used }}</p>
+                                                        <p class="stat-list"><b>Free:</b><br class="mobile-break"> {{ memory.ram.free }}</p>
+                                                    </div>
+                                                    <div class="col-4" style="border-right: 1px solid gray; padding: 0">
+                                                        <div class="progress vertical-progress">
+                                                            <div class="progress-bar" role="progressbar" v-bind:style="{height: memory.ram.percent}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-center">
+                                                            {{ memory.ram.percent }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <h5>Swap:</h5>
+                                                        <p class="stat-list"><b>Total:</b><br class="mobile-break"> {{ memory.swap.total }}</p>
+                                                        <p class="stat-list"><b>Used:</b><br class="mobile-break"> {{ memory.swap.used }}</p>
+                                                        <p class="stat-list"><b>Free:</b><br class="mobile-break"> {{ memory.swap.free }}</p>
+                                                    </div>
+                                                    <div class="col-4" style="padding: 0">
+                                                        <div class="progress vertical-progress">
+                                                            <div class="progress-bar" role="progressbar" v-bind:style="{height: memory.swap.percent}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-center">
+                                                            {{ memory.swap.percent }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Network -->
+                        <div class="card bg-dark text-white border border-secondary">
+                            <h3 class="card-header"><i class="fas fa-globe"></i>&nbsp; Network<span id="Network-toggle" onClick="toggleIcon('Network')" class="card-toggle" data-toggle="collapse" data-target="#Network-body"><i class="fas fa-chevron-up"></i></span></h3>
+                            <div class="collapse show" id="Network-body">
+                                <div class="card-body">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md">
+                                                <h5><i class="fas fa-wifi fa-fw"></i>&nbsp; Wifi:<span class="heading-ip">{{ network.wifi.ip }}</span></h5>
+                                                <p class="stat-list"><b>Download: </b>{{ network.wifi.down_speed }} <span class="storage-path">({{ network.wifi.down_total }})</span></p>
+                                                <p class="stat-list"><b>Upload: </b>{{ network.wifi.up_speed }} <span class="storage-path">({{ network.wifi.up_total }})</span></p>
+                                                <hr class="mobile-hr" style="background-color: lightgray">
+                                            </div>
+                                            <div class="col-md">
+                                                <h5><i class="fas fa-lock fa-fw"></i>&nbsp; VPN:<span class="heading-ip">{{ network.vpn.ip }}</span></h5>
+                                                <p class="stat-list"><b>Download: </b>{{ network.vpn.down_speed }} <span class="storage-path">({{ network.vpn.down_total }})</span></p>
+                                                <p class="stat-list"><b>Upload: </b>{{ network.vpn.up_speed }} <span class="storage-path">({{ network.vpn.up_total }})</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="javascripts/navbar.js"></script>
+        <script src="javascripts/index.js"></script>
+    </body>
+</html>

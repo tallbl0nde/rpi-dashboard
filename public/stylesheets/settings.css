@@ -1,0 +1,38 @@
+[v-cloak] {
+    display: none;
+}
+
+body {
+    background-color: rgb(39, 39, 39);
+}
+
+hr {
+    background-color: gray;
+}
+
+/* Hide arrows */
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+/* Prettify colour selector */
+input::-webkit-color-swatch {
+    border: none;
+}
+
+input[type="color"]{
+    outline: none;
+    border-radius: 4px;
+    border-color: transparent;
+}
+
+#cardcontainer {
+    padding-top: 20px;
+    width: 70%;
+}
+
+@media screen and (max-width: 768px)  {
+    #cardcontainer {
+        width: 90%;
+    }
+}

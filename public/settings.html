@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="apple-touch-icon" sizes="144x144" href="favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+        <link rel="manifest" href="favicon/site.webmanifest">
+        <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="favicon/favicon.ico">
+        <meta name="apple-mobile-web-app-title" content="Pi Dashboard">
+        <meta name="application-name" content="Pi Dashboard">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="favicon/browserconfig.xml">
+        <meta name="theme-color" content="#ffffff">
+
+        <title>Pi Dashboard</title>
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+        <!-- Vue -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+        <!-- Font Awesome -->
+        <script src="javascripts/fontawesome.js"></script>
+
+        <link rel="stylesheet" href="stylesheets/settings.css">
+        <link rel="stylesheet" href="stylesheets/navbar.css">
+    </head>
+    <body>
+        <div id="navbar" v-cloak>
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark navbar-fixed-top">
+                <div id="navleft">
+                    <a class="navbar-brand" style="margin-right: 8px" href="/">
+                        <img src="images/logo.png" height="30px" id="navlogo" class="d-inline-block align-top" alt="Logo">
+                        {{hostname}}
+                    </a>
+                    <p id="navip">{{internalip}}</p>
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navlinks">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navlinks">
+                    <div v-if="showLinks == true" class="navbar-nav mx-auto">
+                        <a class="nav-item nav-link" href="/"><i class="fas fa-tachometer-alt"></i>&nbsp; Overview</a>
+                        <a class="nav-item nav-link" href="processes.html"><i class="far fa-chart-bar"></i>&nbsp; Processes</a>
+                        <a class="nav-item nav-link" href="services.html"><i class="fas fa-tasks"></i>&nbsp; Services</a>
+                        <a class="nav-item nav-link active"><i class="fas fa-cog"></i>&nbsp; Settings</a>
+                        <a class="nav-item nav-link" href="tools.html"><i class="fas fa-tools"></i>&nbsp; Tools</a>
+                    </div>
+                    <div class="nav navbar-nav" id="account">
+                        <a id="loginlink" class="nav-link" href="login.html"><i class="fas fa-sign-in-alt"></i>&nbsp; Login</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="container" id="cardcontainer">
+            <div class="card bg-dark text-white border border-secondary">
+                <h3 class="card-header"><i class="fas fa-cog"></i>&nbsp; Settings</h3>
+                <div class="card-body">
+                    <form>
+                        <h4 style="padding-bottom: 10px">Client:</h4>
+                        <!-- Background -->
+                        <div class="form-group row">
+                            <label for="colorScheme" class="col-3 col-form-label">Background</label>
+                            <div class="col-9">
+                                <label class="btn btn-secondary" onchange="showFilename()">
+                                    Upload image <input type="file" id="backgroundButton" hidden>
+                                </label>
+                                <span style="padding-left: 15px" id="backgroundName"></span>
+                            </div>
+                        </div>
+
+                        <p style="font-size: 0.9em"><i>The following options apply to this device only!</i></p>
+                        <!-- Color Accent -->
+                        <div class="form-group row">
+                            <label for="colorAccent" class="col-3 col-form-label">Accent Colour</label>
+                            <div class="col-9">
+                                <input type="color" id="accent" value="#007bff" onchange="showAccent()">
+                                <span style="padding-left: 15px" id="accentHex"></span>
+                            </div>
+                        </div>
+
+                        <!-- Color Scheme -->
+                        <div class="form-group row">
+                            <label for="colorScheme" class="col-3 col-form-label">Colour Scheme</label>
+                            <div class="col-3">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="colorScheme">
+                                    <label class="btn btn-secondary active">
+                                        <input type="radio" id="dark" autocomplete="off" checked> Dark
+                                    </label>
+                                    <label class="btn btn-secondary">
+                                        <input type="radio" id="light" autocomplete="off"> Light
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Client Update Interval -->
+                        <div class="form-group row">
+                            <label for="clientUpdateInterval" class="col-3 col-form-label">Refresh Interval</label>
+                            <div class="col-3">
+                                <div class="input-group input-group">
+                                    <input type="number" min="0.5" max="60" step="0.1" class="form-control" id="clientUpdateInterval">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="clientUpdateIntervalAppend">seconds</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <!-- Change Password -->
+
+                        <h4 style="padding-bottom: 10px">Server:</h4>
+                        <hr>
+
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="javascripts/navbar.js"></script>
+        <script src="javascripts/settings.js"></script>
+    </body>
+</html>

@@ -1,0 +1,49 @@
+#navlogo {
+    padding-right: 5px;
+}
+
+#navip {
+    color: white;
+    font-size: 70%;
+    margin: 0;
+    padding-top: 10px;
+    margin-left: 8px;
+    display: inline;
+}
+
+.navbar-collapse div a {
+    border-bottom: 2px solid transparent;
+}
+
+.navbar-collapse div a:hover {
+    border-bottom: 2px solid lightgrey;
+}
+
+.navbar-collapse div a.active {
+    border-bottom: 2px solid white;
+}
+
+.navbar-collapse.show div a {
+    border-bottom: 0;
+}
+.navbar-collapse.show div a:hover {
+    border-bottom: 0;
+}
+.navbar-collapse.show div a.active {
+    border-bottom: 0;
+}
+.navbar-collapse.show #account {
+    margin-left: 0;
+}
+.navbar-collapse.collapsing div a {
+    border-bottom: 0;
+}
+.navbar-collapse.collapsing div a:hover {
+    border-bottom: 0;
+}
+.navbar-collapse.collapsing div a.active {
+    border-bottom: 0;
+}
+.navbar-collapse.collapsing #account {
+    margin-left: 0;
+}
